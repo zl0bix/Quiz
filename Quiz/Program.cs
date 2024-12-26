@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace Quiz
 {
@@ -30,17 +31,55 @@ namespace Quiz
 
     class Data
     {
-        string[] Questions;
-        string[] Answers;
-        string[] IsCorrect;
-        int Score;
+        public string Name { get; private set; }
+        public string Password { get; private set; }
+        public int Score { get; private set; }
 
-        Data(string[] questions, string[] answers, string[] isCorrect, int score)
+        public Data(string name, string password, int score)
         {
-            Questions = questions;
-            Answers = answers;
-            IsCorrect = isCorrect;
+            Name = name;
+            Password = password;
             Score = score;
+        }     
+    }
+
+    class Registration
+    {
+        List<Data> _data = new List<Data>();
+
+        string path = @"C:/txt/quiz.txt";
+
+        public bool IsUsed(string str)
+        {
+            foreach(Data it in _data)
+            {
+                if(it.Name == str) 
+
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void SavedData(string name, string password, int num)
+        {
+            using(FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using(StreamWriter sr = new StreamWriter(fs))
+
+                        sr.WriteLine(name + " " + password + " " + num);
+            }
+        }
+
+        public string ReadFile()
+        {
+            using(FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using(StreamReader sr = new StreamReader(fs))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
         }
     }
 
