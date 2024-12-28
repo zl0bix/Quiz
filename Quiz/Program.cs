@@ -13,16 +13,38 @@ namespace Quiz
         static void Main(string[] args)
         {
             QuizProgram quizProgram = new QuizProgram();
+            
+            Registration registration = new Registration();
+
+            string Choice = "";
+            string name = "";
+            string password = "";
+            string LogOut = "exit";
+
+            registration.SetList();
+
+            Console.WriteLine("Нужна регистрация");
+
+            while(!registration.IsUsed(name))
+            {
+                Console.Write("Введите Имя -> ");
+                name = Console.ReadLine();
+            }
+            Console.Write("Введите пароль -> ");
+            password = Console.ReadLine();
+            registration.SavedData(name,password,0);
+            registration.SetList();
+
             quizProgram.Quiz1();
             quizProgram.ShowYourAnswers();
 
-            if(quizProgram.CheckTheResult())
+            if (quizProgram.CheckTheResult())
             {
                 Console.WriteLine("Ты молодей!!!");
             }
             else
             {
-                Console.WriteLine("Ты дятел или я напортачил!!!");
+                Console.WriteLine("Ты nooby или я напортачил!!!");
             }
 
             //Console.WriteLine((int)1 / (double)5);
@@ -61,9 +83,32 @@ namespace Quiz
             return true;
         }
 
+        public void ShowListData()
+        {
+            foreach(Data it in _data)
+            {
+                Console.WriteLine(it.Name + " " + it.Password + " " + it.Score);
+            }
+        }
+
+        public void SetList() 
+        {
+            string strTmp = ReadFile();
+
+            string[] arr = strTmp.Split('\n');
+            string[] arrWords = new string[3];
+
+            for(int i = 0; i < arr.Length - 1; i++)
+            {
+                arrWords = arr[i].Split(' ');
+
+                _data.Add(new Data(arrWords[0] , arrWords[1] , Convert.ToInt32(arrWords[2])));
+            }
+        }
+
         public void SavedData(string name, string password, int num)
         {
-            using(FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            using(FileStream fs = new FileStream(path, FileMode.Append))
             {
                 using(StreamWriter sr = new StreamWriter(fs))
 
@@ -88,7 +133,7 @@ namespace Quiz
         string[] strQue = { "Сколько будет (int)1 / (double)5?", "Какая столица РФ?", "Какие из чисел натуральные?",
                 "Сколько будет num? i = 5; num = ++i + ++i(i и num типа данных integer)" +
                     "в ЯП C++"};
-        string[] strAns = { "1,0, 0.2, 0.1", "Москва, Питер, Воронеж, Берлин", "-1, 0, 0.1, 1", "10, 14, 12, 13" };
+        string[] strAns = { "1, 0, 0.2, 0.1", "Москва, Питер, Воронеж, Берлин", "-1, 0, 0.1, 1", "10, 14, 12, 13" };
 
 
         List<string> CorrectAns = new List<string>() { "0.2", "Москва", "1", "14" };
@@ -128,7 +173,8 @@ namespace Quiz
         {
             foreach(string it in YoursAns)
             {
-                Console.WriteLine(it);
+                int num = 1;
+                Console.Write("Ответ на " + num++ +" вопрос " + it);
             }
         }
 
