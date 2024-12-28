@@ -174,7 +174,10 @@ namespace Quiz
             foreach(string it in YoursAns)
             {
                 int num = 1;
-                Console.Write("Ответ на " + num++ +" вопрос " + it);
+
+                Console.WriteLine(" Ответ на " + num + " вопрос " + it);
+
+                num++;
             }
         }
 
